@@ -29,6 +29,7 @@ function TextForm(props) {
     cpytxt.select();
     if (cpytxt.value.length > 0) {
       navigator.clipboard.writeText(cpytxt.value);
+      document.getSelection().removeAllRanges();
       props.showAlert("Text copied to clipboard successfully", "success");
     } else props.showAlert("Please enter some text to copy!!", "warning");
   };
@@ -50,7 +51,7 @@ function TextForm(props) {
 
           <textarea
             style={{
-              backgroundColor: props.mode === "light" ? "white" : "darkgrey",
+              backgroundColor: props.mode === "light" ? "white" : "#13466e",
               width: "1000px",
               color: props.mode === "light" ? "black" : "white",
             }}
@@ -61,19 +62,39 @@ function TextForm(props) {
             rows="8"
           ></textarea>
         </div>
-        <button className="btn btn-primary mx-2" onClick={getRandomSentence}>
+        <button
+          disabled={!text.length === 0}
+          className="btn btn-primary mx-1"
+          onClick={getRandomSentence}
+        >
           Generate random text
         </button>
-        <button className="btn btn-primary mx-2" onClick={clickUpHandler}>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-primary mx-1  my-1"
+          onClick={clickUpHandler}
+        >
           Convert to UpperCase
         </button>
-        <button className="btn btn-primary" onClick={clickLoHandler}>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-primary mx-1  my-1"
+          onClick={clickLoHandler}
+        >
           Convert to LowerCase
         </button>
-        <button className="btn btn-primary mx-2" onClick={clickClearHandler}>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-primary mx-1  my-1"
+          onClick={clickClearHandler}
+        >
           Clear text
         </button>
-        <button className="btn btn-primary" onClick={clickCopyHandler}>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-primary mx-1 my-1"
+          onClick={clickCopyHandler}
+        >
           Copy to clipboard
         </button>
       </div>
@@ -83,16 +104,22 @@ function TextForm(props) {
       >
         <h2>Your text summary</h2>
         <p>
-          {text.length > 0 ? text.trim().split(" ").length + " " : 0 + " "}
+          {
+            text.split(/\s+/).filter((element) => {
+              return element.length !== 0;
+            }).length
+          }
           words and {text.length} characters
         </p>
-        <p>{text.split(" ").length * 0.08} Minutes read</p>
-        <h3>Preview</h3>
         <p>
-          {text.length > 0
-            ? text
-            : "Enter something in above text field to preview it here."}
+          {0.008 *
+            text.split(/\s+/).filter((element) => {
+              return element.length !== 0;
+            }).length}{" "}
+          Minutes read
         </p>
+        <h3>Preview</h3>
+        <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
       </div>
     </>
   );
